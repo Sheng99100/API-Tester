@@ -3,8 +3,7 @@
               :data="latest_response.headers"
               border
               style="width: 100%; height: 100%">
-        <el-table-column
-            prop="k" label="Key" width="auto" />
+        <el-table-column prop="k" label="Key" width="auto" />
         <el-table-column prop="v" label="Value" width="auto" />
     </el-table>
 </template>

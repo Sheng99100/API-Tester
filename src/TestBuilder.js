@@ -111,6 +111,10 @@ const builder = {
         // ---------------同步组件相关的 js 对象到全局对象---------------
         const stored_test_request = this.getRequest(full_test_name);
         const temp_request = d.value.opened_tests[full_test_name];
+        if (temp_request === d.value.template.test_saved) {
+            this.open_msg('success', 'Saved','The test has been saved')
+            return;
+        }
         for (const key in stored_test_request) {
             stored_test_request[key] = temp_request[key];
         }

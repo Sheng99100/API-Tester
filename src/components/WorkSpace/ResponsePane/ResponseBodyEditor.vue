@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import {ref, watch, nextTick} from "vue";
+import {ref, watch, nextTick, onMounted} from "vue";
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import 'prismjs/components/prism-markup';
@@ -25,7 +25,7 @@ latest_response.value = stored_responses.length !== 0 ? stored_responses[stored_
 watch(()=>stored_responses.length,
     async ()=> {
         latest_response.value = stored_responses.length !== 0 ? stored_responses[stored_responses.length-1] : {};
-        // 等待 Vue 更新 DOM 后
+        // 等待 Vue 更新 DOM 后s
         // 再让 Prism 高亮更新后的 DOM
         await nextTick();
         Prism.highlightAll();
@@ -34,7 +34,13 @@ watch(()=>stored_responses.length,
         props.stored_test.loading = false;
   })
 
-Prism.highlightAll();
+// vue 把 DOM 渲染完成，<code></code> 更新为 latest_response.body 之后
+// Prism.js 再去渲染才有内容可渲染
+// setup() 执行时 dom 还不一定能渲染完成
+// 所以 Prism.highlightAll() 不应该直接放在 setup() 内
+onMounted(()=>{
+    Prism.highlightAll();
+})
 </script>
 
 <style scoped>

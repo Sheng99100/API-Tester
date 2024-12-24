@@ -76,6 +76,7 @@ const stored_request= builder.getRequest(props.full_test_name);
 
 const temp_test = builder.copyRef(stored_test);
 const temp_request= temp_test.value.request;
+
 // 如果 request 是否有更改过（request副本和原来的request是否不同）
 watch(temp_request,
     () => {
@@ -93,6 +94,6 @@ function send() {
         .then((response)=>{
             // 得到 response 后直接保存即可，不需要让用户手动保存
             builder.addResponseToTest(stored_test, response);
-    })
+        })
 }
 </script>

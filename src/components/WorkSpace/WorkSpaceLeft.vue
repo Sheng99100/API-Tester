@@ -20,7 +20,7 @@
                         @click="addTag(work_space_name, test_name)"
                     >
                         <el-tag style="margin-right: 10px;">{{test.request.method}}</el-tag>
-                        <el-text>{{test.test_name}}</el-text>
+                        <el-text>{{test_name}}</el-text>
                     </el-menu-item>
                 </el-menu-item-group>
             </el-sub-menu>

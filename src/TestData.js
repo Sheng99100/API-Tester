@@ -1,5 +1,17 @@
-import { ref } from 'vue'
+import { ref } from 'vue';
 
+const test_template = {
+    loading: false,
+    work_space_name: '',
+    test_name: '',
+    request: {
+        url: "",
+        method: 'Get',
+        headers: [],
+        body: {}
+    },
+    responses: []
+}
 const example_data = {
     state: {
         active_test: ''
@@ -78,8 +90,25 @@ const example_data = {
     }
 }
 
-// 如果 localStorage 没有保存的数据
-// 则使用 example_data
-// 否则在应用初启动时，会被 localStorage 的数据覆盖
-const d = ref(example_data)
+// 应用初启动时，work_spaces 会被 localStorage 的数据覆盖
+const d = ref({
+    state: {
+        active_test: ''
+    },
+    template: {
+        methods: {
+            Get: 'Get',
+            Post: 'Post',
+            Delete: 'Delete'
+        },
+        test_saved: 'saved',
+        test_name_separator: '/',
+        unsaved_dialog_title: 'DO YOU WANT TO SAVE?',
+        unsaved_dialog_prompt: 'This tab has unsaved changes which will be lost if you choose to close it. Save these changes to avoid losing your work.',
+        new_tag_dialog_prompt: 'Input the name test name and work space name witch includes it',
+        new_tag_dialog_title:  'Create a new Test',
+    },
+    work_spaces: {},
+    opened_tests: {}
+})
 export default d;

@@ -5,6 +5,7 @@
             type="card"
             editable
             @tab-remove="removeTab"
+            @tab-add="new_tag_dialog_visible = true"
         >
             <!--    标签页      -->
             <el-tab-pane
@@ -26,7 +27,7 @@
     </div>
     <!-- 关闭标签时的为保存提示对话框 -->
     <el-dialog
-            v-model="dialogVisible"
+            v-model="close_dialog_visible"
             :title="d.template.unsaved_dialog_title"
             width="500"
     >
@@ -37,8 +38,57 @@
                     Don't Save
                 </el-button>
                 <div>
-                    <el-button @click="dialogVisible = false">Cancel</el-button>
+                    <el-button @click="close_dialog_visible = false">Cancel</el-button>
                     <el-button type="primary" @click="closeTest(true)">
+                        Save
+                    </el-button>
+                </div>
+            </div>
+        </template>
+    </el-dialog>
+
+    <!-- 点击新建 tag 标签时弹出的新建 Test 对话框 -->
+    <el-dialog
+        v-model="new_tag_dialog_visible"
+        :title="d.template.new_tag_dialog_title"
+        width="500"
+    >
+        <el-row>
+            <el-col :span="24">
+                <el-text>{{d.template.new_tag_dialog_prompt}}</el-text>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="7">
+                <el-text>
+                    WorkSpace name
+                </el-text>
+            </el-col>
+            <el-col :span="17">
+                <el-input
+                    v-model="new_work_space_name"
+                    placeholder="Please Input New WorkSpace Name"
+                />
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="7">
+                <el-text>
+                    New Test name
+                </el-text>
+            </el-col>
+            <el-col :span="17">
+                <el-input
+                    v-model="new_test_name"
+                    placeholder="Please Input New Test Name"
+                />
+            </el-col>
+        </el-row>
+        <template #footer>
+            <div class="dialog-footer">
+                <div>
+                    <el-button @click="new_tag_dialog_visible = false">Cancel</el-button>
+                    <el-button type="primary" @click="addTab">
                         Save
                     </el-button>
                 </div>
@@ -55,15 +105,18 @@ import d from "../../TestData.js";
 import builder from "../../TestBuilder.js";
 
 const opened_tests = d.value.opened_tests;
-const dialogVisible = ref(false);
+const close_dialog_visible = ref(false);
 const onclose_full_test_name = ref('');
+const new_tag_dialog_visible = ref(false);
+const new_test_name = ref('');
+const new_work_space_name = ref('');
 
 function removeTab(full_test_name) {
     // 更新正要关闭的 Test 全名（work_space_name/test_name）
     onclose_full_test_name.value = full_test_name;
     if (opened_tests[full_test_name] !== d.value.template.test_saved) {
         // 关闭时未保存，显示对话框提示保存
-        dialogVisible.value = true;
+        close_dialog_visible.value = true;
     }else {
         // 否则直接关闭
         closeTest(false);
@@ -76,7 +129,14 @@ function closeTest(save) {
     if(save) builder.saveTest(onclose_full_test_name.value);
     // 在已打开的 Test 中删除 full_test_name（关闭的Test名） 对应的 Test 对象
     delete opened_tests[onclose_full_test_name.value];
-    dialogVisible.value = false;
+    close_dialog_visible.value = false;
+}
+
+function addTab() {
+    const full_test_name = `${new_work_space_name.value}${d.value.template.test_name_separator}${new_test_name.value}`;
+    builder.addEmptyTest(full_test_name);
+    // Test 刚创建就将其打开，刚打开的 RequestPane 组件中，temp_test 是新从全局变量获取没修改过的，所以设置为 ”已保存“
+    new_tag_dialog_visible.value = false;
 }
 </script>
 

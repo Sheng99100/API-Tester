@@ -41,7 +41,7 @@
     <!--请求头编辑区-->
     <el-row>
         <el-col :span="24">
-            <el-tabs model-value="Headers">
+            <el-tabs model-value="Params">
                 <el-tab-pane label="Params" name="Params">
                     <params-editor :temp_test="temp_test"/>
                 </el-tab-pane>
@@ -49,7 +49,7 @@
                     <headers-editor :temp_test="temp_test"/>
                 </el-tab-pane>
                 <el-tab-pane label="Body" name="Body">
-
+                    <body-editor :temp_test="temp_test"/>
                 </el-tab-pane>
                 <el-tab-pane label="Scripts" name="Scripts">
 
@@ -66,6 +66,7 @@
 import {watch} from "vue";
 import ParamsEditor from "./ParamsEditor.vue";
 import HeadersEditor from "./HeadersEditor.vue";
+import BodyEditor from "./BodyEditor.vue";
 import d from "../../../TestData.js";
 import builder from "../../../TestBuilder.js";
 import http_stater from "../../../HTTPStarter.js";
@@ -77,7 +78,8 @@ const stored_request= builder.getRequest(props.full_test_name);
 const temp_test = builder.copyRef(stored_test);
 const temp_request= temp_test.value.request;
 
-// 如果 request 是否有更改过（request副本和原来的request是否不同）
+// 如果 request 有更改过（request副本和原来的request是否不同）
+// 使该 test 在 opened_tests 中的值为最后更改过的 temp_request
 watch(temp_request,
     () => {
         d.value.opened_tests[props.full_test_name] =
@@ -92,8 +94,9 @@ function send() {
     http_stater
         .send(temp_test.value)
         .then((response)=>{
-            // 得到 response 后直接保存即可，不需要让用户手动保存
-            builder.addResponseToTest(stored_test, response);
+            console.log(response);
+            // response 直接保存，不需要让用户手动保存
+            builder.saveResponseToTest(stored_test, response);
         })
 }
 </script>

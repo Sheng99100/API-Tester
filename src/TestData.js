@@ -8,7 +8,11 @@ const test_template = {
         url: "",
         method: 'Get',
         headers: [],
-        body: {}
+        body: {
+            type: 'none',
+            form_data: [],
+            row: ""
+        }
     },
     responses: []
 }

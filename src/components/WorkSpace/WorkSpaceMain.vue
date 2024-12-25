@@ -15,9 +15,7 @@
                 :name="full_test_name"
             >
                 <div class="request-pane-wrapper">
-<!--                    <el-row><el-col>-->
                     <request-pane :full_test_name="full_test_name"/>
-<!--                    </el-row><el-row>-->
                 </div>
                 <div class="response-pane-wrapper">
                     <response-pane :full_test_name="full_test_name"/>
@@ -111,6 +109,8 @@ const new_tag_dialog_visible = ref(false);
 const new_test_name = ref('');
 const new_work_space_name = ref('');
 
+
+// el-tab 关闭标签页事件，参数为要关闭 tag 绑定的 name
 function removeTab(full_test_name) {
     // 更新正要关闭的 Test 全名（work_space_name/test_name）
     onclose_full_test_name.value = full_test_name;

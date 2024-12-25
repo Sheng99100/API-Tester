@@ -62,7 +62,6 @@
 </template>
 
 <script setup>
-import builder from '../../../TestBuilder.js'
 import {onMounted, ref, watch} from "vue";
 
 const props = defineProps(['temp_test']);

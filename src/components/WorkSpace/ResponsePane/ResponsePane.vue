@@ -4,13 +4,16 @@
       <el-row>
           <el-col :span="24">
               <div class="status_line">
-                  <el-tag v-show="latest_response.status && latest_response.status <= 200">
+                  <el-tag v-show="latest_response.status && latest_response.status > 0 && latest_response.status <= 200">
                       <el-text>
                           {{latest_response.status + " " + latest_response.statusText}}
                       </el-text>
                   </el-tag>
                   <el-tag type="danger" v-show="latest_response.status && latest_response.status > 200">
                       {{latest_response.status + " " + latest_response.statusText}}
+                  </el-tag>
+                  <el-tag type="danger" v-show="latest_response.status === -1">
+                      {{latest_response.statusText}}
                   </el-tag>
                   <el-tag v-show="!latest_response.status">
                       <el-text>

@@ -257,9 +257,8 @@ const builder = {
 
         // 将新的 test 加入指定的 workspace
         d.value.work_spaces[work_space_name]['tests'][test_name] = new_test;
-
         // 将新建 test 加入已打开的 test 列表
-        d.value.opened_tests[full_test_name] = d.value.template.test_saved
+        d.value.opened_tests[full_test_name] = new_test.request;
         // 将新建 test
         d.value.state.active_test = full_test_name;
     },
@@ -286,10 +285,70 @@ const builder = {
         new_response.headers = [];
         new_response.body = '';
         new_response.cookies = [];
-        new_response.status = 0;
-        new_response.statusText = error.message;
+        new_response.status = -1;
+        new_response.statusText = "请求已经成功发起，但没有收到响应";
 
+        console.log(new_response);
         glabal_test.responses.push(new_response);
+    },
+    exportTest(test) {
+        // 定义要写入文件的字符串内容
+        const content = JSON.stringify(test, null, 4);
+
+        // 创建一个 Blob 对象
+        const blob = new Blob([content], { type: 'application/json' });
+
+        // 使用 URL.createObjectURL 为 Blob 创建一个临时 URL
+        const url = URL.createObjectURL(blob);
+
+        // 创建一个隐藏的 <a> 元素用于触发下载
+        const a = document.createElement('a');
+        a.href = url;
+
+        // 设置下载的文件名
+        a.download = `${test.work_space_name}_${test.test_name}`;
+
+        // 触发下载
+        a.click();
+
+        // 释放 URL 对象
+        URL.revokeObjectURL(url);
+    },
+    importTest(file_input_dom) {
+        // 获取文件对象
+        const file = file_input_dom.files[0];
+        let import_test = undefined;
+
+        const reader = new FileReader();
+
+        // 读取前，先设置读取完成后的回调
+        reader.onload = (event) => {
+            let test_name =
+                file.name.split(".")[0].split("_")[1];
+            let work_space_name =
+                file.name.split(".")[0].split("_")[0];
+            let full_test_name = `${work_space_name}/${test_name}`;
+
+            import_test = JSON.parse(event.target.result); // 获取文件内容
+
+            // 如果 workspace 不存在，则新建
+            if( !d.value.work_spaces[work_space_name] ) {
+                d.value.work_spaces[work_space_name] = {
+                    work_space_name: work_space_name,
+                    tests: {}
+                }
+            }
+
+            // 将新导入的 test 加入指定的 workspace
+            d.value.work_spaces[work_space_name]['tests'][test_name] = import_test;
+            // 将新建导入的 test 加入已打开的 test 列表
+            d.value.opened_tests[full_test_name] = import_test.request;
+            // 将新导入的 test 设为活动 test
+            d.value.state.active_test = full_test_name;
+        }
+
+        // 开始读取
+        reader.readAsText(file);
     }
 }
 export default builder;

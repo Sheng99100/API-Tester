@@ -14,6 +14,12 @@
                 :label="full_test_name"
                 :name="full_test_name"
             >
+                <template #label>
+                    <!-- 自定义标签内容，结合 el-badge -->
+                    <el-badge :is-dot="opened_tests[full_test_name] !== d.template.test_saved">
+                        <el-text >{{ full_test_name }}</el-text>
+                    </el-badge>
+                </template>
                 <div class="request-pane-wrapper">
                     <request-pane :full_test_name="full_test_name"/>
                 </div>

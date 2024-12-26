@@ -30,10 +30,10 @@ function detectCodeMode(content) {
 }
 
 function refreshEditor() {
+    // 更新最近的 response
     latest_response.value = stored_responses.length !== 0 ?
         stored_responses[stored_responses.length-1] :
         "";
-    console.log(stored_responses)
     // 重新渲染文本区域内容
     let format_body = typeof latest_response.value.body === 'string' ?
         latest_response.value.body :

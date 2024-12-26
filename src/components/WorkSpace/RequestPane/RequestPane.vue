@@ -8,8 +8,8 @@
             </el-breadcrumb>
         </el-col>
     </el-row>
-    <el-row>
-        <el-col :span="17">
+    <el-row justify="space-between">
+        <el-col :span="15">
             <el-input
                 v-model="temp_request.url"
                 placeholder="Enter URL or paste text"
@@ -29,15 +29,31 @@
                 </template>
             </el-input>
         </el-col>
-        <el-col :span="7">
-            <el-button
-                @click="send"
-            >Send</el-button>
-            <el-button
-                @click="builder.saveTest(full_test_name)"
-            >Save</el-button>
+        <el-col :span="9">
+            <div style="display: flex; justify-content: center">
+                <el-button
+                    @click="send"
+                >Send</el-button>
+                <el-button
+                    @click="builder.saveTest(full_test_name)"
+                >Save</el-button>
+                <el-button
+                    @click="builder.exportTest(temp_test)"
+                >Export</el-button>
+                <el-button
+                    @click="file_input.click()"
+                >Import</el-button>
+            </div>
         </el-col>
     </el-row>
+
+    <input
+        ref="file_input"
+        @change="builder.importTest(file_input)"
+        type="file"
+        id="fileInput"
+        v-show="false"/>
+
     <!--请求头编辑区-->
     <el-row>
         <el-col :span="24">
@@ -54,7 +70,7 @@
                 <el-tab-pane label="Scripts" name="Scripts">
 
                 </el-tab-pane>
-                <el-tab-pane label="Settings" name="fifth">
+                <el-tab-pane label="Settings" name="Settings">
 
                 </el-tab-pane>
             </el-tabs>
@@ -63,7 +79,7 @@
 </template>
 
 <script setup>
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import ParamsEditor from "./ParamsEditor.vue";
 import HeadersEditor from "./HeadersEditor.vue";
 import BodyEditor from "./BodyEditor.vue";
@@ -77,6 +93,7 @@ const stored_request= builder.getRequest(props.full_test_name);
 
 const temp_test = builder.copyRef(stored_test);
 const temp_request= temp_test.value.request;
+const file_input = ref();
 
 // 如果 request 有更改过（request副本和原来的request是否不同）
 // 使该 test 在 opened_tests 中的值为最后更改过的 temp_request
@@ -96,19 +113,19 @@ function send() {
         .catch((error) => {
             console.log( "error" );
             if (error.response) {
+                console.log("状态代码超出了 2xx 的范围");
                 // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
                 builder.saveResponseToTest(stored_test, error.response);
             } else if (error.request) {
                 // 请求已经成功发起，但没有收到响应
                 // `error.request` 在浏览器中是 XMLHttpRequest 的实例，
-                console.log(error.request);
+                console.log("请求已经成功发起，但没有收到响应", error.request);
                 builder.saveErrorResponse(stored_test, error);
             } else {
                 // 发送请求时出了问题
-                console.log('Error', error.message);
+                console.log('发送请求时出了问题', error.message);
                 builder.saveErrorResponse(stored_test, error)
             }
-            console.log(error.config);
             stored_test.loading = false;
         }).then((response)=>{
             console.log("success", response);

@@ -48,12 +48,9 @@ watch(content_type, () => {
     prop.temp_test.request.headers.forEach((header)=>{
         if(header.k === 'Content-Type') {
             header.v = content_type_map[content_type.value];
-            if(content_type.value === 'none') {
-                header.selected = false;
-            }
+            header.selected = content_type.value !== 'none';
         }
     })
-
 })
 
 </script>

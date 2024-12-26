@@ -1,11 +1,6 @@
-<script>
+<script setup>
 import Left from "./WorkSpaceLeft.vue";
-import {defineComponent} from "vue";
 import WorkSpaceMain from "./WorkSpaceMain.vue";
-
-export default defineComponent({
-    components: {WorkSpaceMain, Left}
-})
 </script>
 
 <template>
@@ -18,10 +13,6 @@ export default defineComponent({
             <el-main>
                 <work-space-main/>
             </el-main>
-            <el-divider direction="vertical" border-style="solid" />
-            <el-aside width="100px">
-
-            </el-aside>
         </el-container>
     </div>
 </template>

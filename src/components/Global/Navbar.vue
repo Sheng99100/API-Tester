@@ -1,11 +1,3 @@
-<script>
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-    name: "Nav"
-})
-</script>
-
 <template>
     <header id="navbar">
         <div id="navbar_wrapper">

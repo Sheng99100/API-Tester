@@ -28,15 +28,32 @@ const component_map = ref({
     'form_data': FormDataEditor,
     'none': undefined
 })
-const content_type = ref("FormDataEditor");
+const content_type_map = {
+    'json': "application/json",
+    'form_data': "multipart/form-data",
+    'none': '<calculated when request is sent>'
+}
+
+const content_type = ref("none");
+
+// 如果用户还没有选择过请求 body 类型
+// 默认选择 body 为 none
+content_type.value =
+    prop.temp_test.request.body.type ?
+        prop.temp_test.request.body.type :
+        "none";
 
 watch(content_type, () => {
     prop.temp_test.request.body.type = content_type.value;
-})
+    prop.temp_test.request.headers.forEach((header)=>{
+        if(header.k === 'Content-Type') {
+            header.v = content_type_map[content_type.value];
+            if(content_type.value === 'none') {
+                header.selected = false;
+            }
+        }
+    })
 
-content_type.value =
-    prop.temp_test.request.body.type ?
-    prop.temp_test.request.body.type :
-    "FormDataEditor";
+})
 
 </script>

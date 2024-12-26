@@ -27,7 +27,7 @@ onMounted(() => {
     const lastChar = doc.getLine(lastLine).length;
     codemirror_instance.setCursor({ line: lastLine, ch: lastChar });
 
-    // 监听内容修改事件
+    // 设置内容修改事件的回调
     codemirror_instance.on('change', (instance, changeObj) => {
         prop.temp_test.request.body.row = instance.getValue();
     });

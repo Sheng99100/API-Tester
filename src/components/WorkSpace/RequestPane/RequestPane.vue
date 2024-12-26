@@ -93,10 +93,30 @@ function send() {
     stored_test.loading = true;
     http_stater
         .send(temp_test.value)
-        .then((response)=>{
-            console.log(response);
-            // response 直接保存，不需要让用户手动保存
-            builder.saveResponseToTest(stored_test, response);
+        .catch((error) => {
+            console.log( "error" );
+            if (error.response) {
+                // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
+                builder.saveResponseToTest(stored_test, error.response);
+            } else if (error.request) {
+                // 请求已经成功发起，但没有收到响应
+                // `error.request` 在浏览器中是 XMLHttpRequest 的实例，
+                console.log(error.request);
+                builder.saveErrorResponse(stored_test, error);
+            } else {
+                // 发送请求时出了问题
+                console.log('Error', error.message);
+                builder.saveErrorResponse(stored_test, error)
+            }
+            console.log(error.config);
+            stored_test.loading = false;
+        }).then((response)=>{
+            console.log("success", response);
+            if(response) {
+                // response 直接保存，不需要让用户手动保存
+              builder.saveResponseToTest(stored_test, response);
+              stored_test.loading = false;
+            }
         })
 }
 </script>

@@ -1,5 +1,6 @@
 import d from './TestData.js'
 import axios from "axios";
+import builder from "./TestBuilder.js";
 
 const axios_config_builder = {
     buildConfig(test) {
@@ -11,6 +12,7 @@ const axios_config_builder = {
         axios_config['params']  = this.buildParamsConfig(test);
         axios_config['headers'] = this.buildHeadersConfig(test);
         axios_config['data']    = this.buildBodyConfig(test);
+
         return axios_config;
     },
     buildHeadersConfig(test) {
@@ -36,7 +38,14 @@ const axios_config_builder = {
 
         if(test.request.method === d.value.template.methods.Post) {
             if(test_req_body.type === "json"){
-                config_body = test_req_body.row;
+                try {
+                    // axios 将对象转换为 json body
+                    // 如果是字符串，content-type 会被改为 urlencode
+                    config_body = JSON.parse(test_req_body.row);
+                }catch (e) {
+                    builder.open_msg("error", "JSON Parse Error!", "Please check the JSON Format");
+                    return {};
+                }
             }else if(test_req_body.type === "form_data") {
                 config_body = {};
                 test_req_body.form_data.forEach((form_param) => {

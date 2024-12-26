@@ -17,10 +17,8 @@ let latest_response = ref({});
 latest_response.value = stored_responses.length !== 0 ? stored_responses[stored_responses.length-1] : {};
 
 watch(()=>stored_responses.length,
-    async ()=> {
+     ()=> {
         latest_response.value = stored_responses.length !== 0 ? stored_responses[stored_responses.length-1] : {};
-        await nextTick();
-        props.stored_test.loading = false;
     })
 </script>
 

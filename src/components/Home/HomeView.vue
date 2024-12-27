@@ -29,7 +29,7 @@ import {onMounted} from "vue";
 import {gsap} from "gsap";
 
 onMounted(() => {
-    gsap.from("#home", {duration: .90,  ease: "power2", y: -147, opacity: 0});
+    gsap.from("#home", {duration: .6,  ease: "power2", y: -90, opacity: 0});
 })
 </script>
 

@@ -47,11 +47,13 @@ const axios_config_builder = {
                     return {};
                 }
             }else if(test_req_body.type === "form_data") {
-                config_body = {};
+                console.log( "form_data" );
+                config_body = new FormData();
                 test_req_body.form_data.forEach((form_param) => {
                     if(form_param.selected)
-                        config_body[form_param.k] = form_param.v;
+                        config_body.append(form_param.k, form_param.v);
                 })
+                console.log( config_body )
             }
         }
 

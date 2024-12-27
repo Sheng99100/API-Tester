@@ -306,7 +306,7 @@ const builder = {
         a.href = url;
 
         // 设置下载的文件名
-        a.download = `${test.work_space_name}_${test.test_name}`;
+        a.download = `${test.work_space_name}--${test.test_name}`;
 
         // 触发下载
         a.click();
@@ -324,9 +324,9 @@ const builder = {
         // 读取前，先设置读取完成后的回调
         reader.onload = (event) => {
             let test_name =
-                file.name.split(".")[0].split("_")[1];
+                file.name.split(".")[0].split("--")[1];
             let work_space_name =
-                file.name.split(".")[0].split("_")[0];
+                file.name.split(".")[0].split("--")[0];
             let full_test_name = `${work_space_name}/${test_name}`;
 
             import_test = JSON.parse(event.target.result); // 获取文件内容
